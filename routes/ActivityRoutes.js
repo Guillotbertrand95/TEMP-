@@ -53,5 +53,18 @@ router.delete("/:id", authMiddleware, async (req, res) => {
 		res.status(400).json({ error: err.message });
 	}
 });
-
+// Supprimer toutes les activités de l'utilisateur connecté
+router.delete("/", authMiddleware, async (req, res) => {
+	try {
+		await Activity.deleteMany({ user: req.user.id }); // ✅ correction ici
+		res.json({
+			message: "Toutes les activités ont été supprimées avec succès.",
+		});
+	} catch (err) {
+		console.error(err);
+		res.status(500).json({
+			message: "Erreur lors de la suppression des activités.",
+		});
+	}
+});
 export default router;

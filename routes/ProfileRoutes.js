@@ -4,10 +4,12 @@ import { authMiddleware } from "../middleware/authMiddleware.js";
 import User from "../models/User.js";
 const router = express.Router();
 
-// GET : récupérer le profil de l'utilisateur connecté
 router.get("/", authMiddleware, async (req, res) => {
 	try {
-		const profile = await Profile.findOne({ user: req.user.id });
+		const profile = await Profile.findOne({ user: req.user.id }).populate(
+			"user",
+			["name", "email"]
+		);
 		if (!profile) {
 			return res.status(404).json({ error: "Profil non trouvé" });
 		}
